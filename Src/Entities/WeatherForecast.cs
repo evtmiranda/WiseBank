@@ -1,4 +1,4 @@
-namespace WiseBank;
+namespace WiseBank.Src.Entities;
 
 public class WeatherForecast
 {
