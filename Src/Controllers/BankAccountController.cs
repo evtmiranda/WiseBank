@@ -1,5 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using WiseBank.Src.Entities;
+using WiseBank.Src.Services.Dtos;
+using WiseBank.Src.Services.Interfaces;
 
 namespace WiseBank.Src.Controllers;
 
@@ -7,38 +9,47 @@ namespace WiseBank.Src.Controllers;
 [Route("[controller]")]
 public class BankAccountController : ControllerBase
 {
-    [HttpPost]
-    public async Task<ActionResult<WeatherForecast>> CreateAsync()
+    private readonly IBankAccountService _bankAccountService;
+
+    public BankAccountController(IBankAccountService bankAccountService)
     {
-        await Task.FromResult("");
-        return CreatedAtAction("GetById", new { id = 1 }, new WeatherForecast());
+        _bankAccountService = bankAccountService;
+    }
+
+    [HttpPost]
+    public async Task<ActionResult<BankAccount>> CreateAsync([FromBody] BankAccountDto bankAccountDto, CancellationToken cancellationToken)
+    {
+        var bankAccount = await _bankAccountService.CreateAsync(bankAccountDto, cancellationToken);
+
+        return CreatedAtAction(nameof(GetByIdAsync), new { id = bankAccount.Id, cancellationToken }, bankAccount);
     }
 
     [HttpGet("{id}")]
-    public async Task<ActionResult<WeatherForecast>> GetByIdAsync([FromRoute] int id)
+    [ActionName(nameof(GetByIdAsync))]
+    public async Task<ActionResult<BankAccount>> GetByIdAsync([FromRoute] int id, CancellationToken cancellationToken)
     {
-        await Task.FromResult("");
-        return Ok(new WeatherForecast());
+        var bankAccount = await _bankAccountService.GetByIdAsync(id, cancellationToken);
+        return Ok(bankAccount);
     }
 
     [HttpPost("{id}/Deposit")]
-    public async Task<ActionResult<WeatherForecast>> DepositAsync([FromRoute] int id)
+    public async Task<ActionResult<BankAccount>> DepositAsync([FromRoute] int id, CancellationToken cancellationToken)
     {
         await Task.FromResult("");
-        return CreatedAtAction("GetById", new { id = 1 }, new WeatherForecast());
+        return CreatedAtAction("GetById", new { id = 1 });
     }
 
     [HttpPost("{id}/Withdraw")]
-    public async Task<ActionResult> WithdrawAsync([FromRoute] int id)
+    public async Task<ActionResult> WithdrawAsync([FromRoute] int id, CancellationToken cancellationToken)
     {
         await Task.FromResult("");
-        return CreatedAtAction("GetById", new { id = 1 }, new WeatherForecast());
+        return CreatedAtAction("GetById", new { id = 1 });
     }
 
     [HttpPost("{id}/Transfer")]
-    public async Task<ActionResult> TransferAsync([FromRoute] int id)
+    public async Task<ActionResult> TransferAsync([FromRoute] int id, CancellationToken cancellationToken)
     {
         await Task.FromResult("");
-        return CreatedAtAction("GetById", new { id = 1 }, new WeatherForecast());
+        return CreatedAtAction("GetById", new { id = 1 });
     }
 }
