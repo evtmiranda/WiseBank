@@ -36,23 +36,23 @@ public class BankAccountController : ControllerBase
     }
 
     [HttpPost("{id}/Deposit")]
-    public async Task<ActionResult<BankAccount>> DepositAsync([FromRoute] int id, CancellationToken cancellationToken)
+    public async Task<ActionResult<BankAccount>> DepositAsync([FromRoute] int id, [FromBody] DepositDto depositDto, CancellationToken cancellationToken)
     {
-        await Task.FromResult("");
-        return CreatedAtAction("GetById", new { id = 1 });
+        var bankAccount = await _bankAccountService.DepositAsync(id, depositDto, cancellationToken);
+        return Ok(bankAccount);
     }
 
     [HttpPost("{id}/Withdraw")]
-    public async Task<ActionResult> WithdrawAsync([FromRoute] int id, CancellationToken cancellationToken)
+    public async Task<ActionResult> WithdrawAsync([FromRoute] int id, [FromBody] WithdrawDto withdrawDto, CancellationToken cancellationToken)
     {
-        await Task.FromResult("");
-        return CreatedAtAction("GetById", new { id = 1 });
+        var bankAccount = await _bankAccountService.WithdrawAsync(id, withdrawDto, cancellationToken);
+        return Ok(bankAccount);
     }
 
     [HttpPost("{id}/Transfer")]
-    public async Task<ActionResult> TransferAsync([FromRoute] int id, CancellationToken cancellationToken)
+    public async Task<ActionResult> TransferAsync([FromRoute] int id, [FromBody] TransferDto transferDto, CancellationToken cancellationToken)
     {
-        await Task.FromResult("");
-        return CreatedAtAction("GetById", new { id = 1 });
+        var bankAccount = await _bankAccountService.TransferAsync(id, transferDto, cancellationToken);
+        return Ok(bankAccount);
     }
 }

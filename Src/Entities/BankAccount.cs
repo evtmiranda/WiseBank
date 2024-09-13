@@ -21,4 +21,19 @@ public class BankAccount
 
         Balance += amount;
     }
+
+    public void Withdraw(decimal amount)
+    {
+        if (amount <= 0)
+        {
+            throw new ArgumentException("O valor do saque deve ser maior do que zero");
+        }
+
+        if (amount > Balance)
+        {
+            throw new ArgumentException($"O valor do saque deve ser de no máximo R$ {Balance}");
+        }
+
+        Balance -= amount;
+    }
 }

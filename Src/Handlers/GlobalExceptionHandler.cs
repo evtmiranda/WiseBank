@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
+using WiseBank.Src.Exceptions;
 
 namespace WiseBank.Src.Handlers;
 
@@ -20,11 +21,34 @@ public sealed class GlobalExceptionHandler : IExceptionHandler
         _logger.LogError(
             exception, "Exception occurred: {Message}", exception.Message);
 
-        var problemDetails = new ProblemDetails
+        ProblemDetails problemDetails;
+
+        if (exception is BankAccountNotFoundException)
         {
-            Status = StatusCodes.Status500InternalServerError,
-            Title = "Server error"
-        };
+            problemDetails = new ProblemDetails
+            {
+                Status = StatusCodes.Status404NotFound,
+                Title = "Resource Not Found"
+            };
+        }
+        else if (exception is ArgumentException)
+        {
+            problemDetails = new ProblemDetails
+            {
+                Status = StatusCodes.Status400BadRequest,
+                Title = "Invalid Argument"
+            };
+        }
+        else
+        {
+
+            problemDetails = new ProblemDetails
+            {
+                Status = StatusCodes.Status500InternalServerError,
+                Title = "Server error"
+            };
+        }
+
 
         httpContext.Response.StatusCode = problemDetails.Status.Value;
 
