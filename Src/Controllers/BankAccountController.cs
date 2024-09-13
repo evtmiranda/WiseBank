@@ -17,10 +17,9 @@ public class BankAccountController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult<BankAccount>> CreateAsync([FromBody] BankAccountDto bankAccountDto, CancellationToken cancellationToken)
+    public async Task<ActionResult<BankAccount>> CreateAsync([FromBody] CreateBankAccountDto createBankAccountDto, CancellationToken cancellationToken)
     {
-        var bankAccount = await _bankAccountService.CreateAsync(bankAccountDto, cancellationToken);
-
+        var bankAccount = await _bankAccountService.CreateAsync(createBankAccountDto, cancellationToken);
         return CreatedAtAction(nameof(GetByIdAsync), new { id = bankAccount.Id, cancellationToken }, bankAccount);
     }
 
@@ -29,6 +28,10 @@ public class BankAccountController : ControllerBase
     public async Task<ActionResult<BankAccount>> GetByIdAsync([FromRoute] int id, CancellationToken cancellationToken)
     {
         var bankAccount = await _bankAccountService.GetByIdAsync(id, cancellationToken);
+        if (bankAccount is null)
+        {
+            return NotFound();
+        }
         return Ok(bankAccount);
     }
 
