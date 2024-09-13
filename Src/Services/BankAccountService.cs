@@ -28,7 +28,7 @@ public class BankAccountService : IBankAccountService
         var bankAccount = await _wiseBankContext.BankAccounts.FirstOrDefaultAsync(b => b.Id == bankAccountId, cancellationToken);
         if (bankAccount is null)
         {
-            throw new BankAccountNotFoundException();
+            throw new BankAccountNotFoundException($"Nenhuma conta bancária com o id {bankAccountId} foi encontrada.");
         }
         return bankAccount;
     }
@@ -37,6 +37,7 @@ public class BankAccountService : IBankAccountService
     {
         var bankAccount = await GetByIdAsync(bankAccountId, cancellationToken);
         bankAccount.Deposit(depositDto.Amount);
+        await _wiseBankContext.SaveChangesAsync(cancellationToken);
         return bankAccount;
     }
 
@@ -44,6 +45,7 @@ public class BankAccountService : IBankAccountService
     {
         var bankAccount = await GetByIdAsync(bankAccountId, cancellationToken);
         bankAccount.Withdraw(withdrawDto.Amount);
+        await _wiseBankContext.SaveChangesAsync(cancellationToken);
         return bankAccount;
     }
 
@@ -53,6 +55,7 @@ public class BankAccountService : IBankAccountService
         var targetBankAccount = await GetByIdAsync(transferDto.TargetBankAccountId, cancellationToken);
         sourceBankAccount.Withdraw(transferDto.Amount);
         targetBankAccount.Deposit(transferDto.Amount);
+        await _wiseBankContext.SaveChangesAsync(cancellationToken);
         return sourceBankAccount;
     }
 }

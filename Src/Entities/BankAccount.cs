@@ -5,7 +5,6 @@ public class BankAccount
     public BankAccount(string ownerName)
     {
         OwnerName = ownerName;
-        Balance = 0;
     }
 
     public int Id { get; init; }
@@ -31,7 +30,7 @@ public class BankAccount
 
         if (amount > Balance)
         {
-            throw new ArgumentException($"O valor do saque deve ser de no máximo R$ {Balance}");
+            throw new ArgumentException($"Saldo insuficiente. O saldo disponível em conta é R$ {Balance}");
         }
 
         Balance -= amount;

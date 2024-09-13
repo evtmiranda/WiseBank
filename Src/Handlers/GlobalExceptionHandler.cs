@@ -28,7 +28,7 @@ public sealed class GlobalExceptionHandler : IExceptionHandler
             problemDetails = new ProblemDetails
             {
                 Status = StatusCodes.Status404NotFound,
-                Title = "Resource Not Found"
+                Title = exception.Message
             };
         }
         else if (exception is ArgumentException)
@@ -36,7 +36,7 @@ public sealed class GlobalExceptionHandler : IExceptionHandler
             problemDetails = new ProblemDetails
             {
                 Status = StatusCodes.Status400BadRequest,
-                Title = "Invalid Argument"
+                Title = exception.Message
             };
         }
         else
